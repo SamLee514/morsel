@@ -6,25 +6,30 @@ enum Input {
     Space,
 }
 
-struct Node {
-    left: Option<char>,
-    right: Option<char>,
+// Need a character, a "pass" or an error
+// Dits and Dahs don't try to access the character, so they are either "pass" or Error
+// Space try to access the character, so they are either character or Error
+
+struct Node<'a> {
+    left: Option<&'a str>,
+    right: Option<&'a str>,
     value: Option<char>,
 }
 
-struct Tree {
-    nodes: HashMap<Option<String>, Node>,
+struct Tree<'a> {
+    nodes: HashMap<&'a str, Node<'a>>,
+    cur: &'a str,
 }
 
-impl Tree {
+impl Tree<'_> {
     pub fn new() -> Self {
         let empty_fields = Node {
             left: None,
             right: None,
             value: None,
         };
-        Self.nodes = HashMap::new();
-        Self.nodes.insert(
+        let mut nodes = HashMap::new();
+        nodes.insert(
             "5",
             Node {
                 left: None,
@@ -32,257 +37,374 @@ impl Tree {
                 value: Some('5'),
             },
         );
-        Self.nodes.insert(
+        nodes.insert(
             "4",
             Node {
                 value: Some('4'),
                 ..empty_fields
             },
         );
-        Self.nodes.insert(
+        nodes.insert(
             "3",
             Node {
                 value: Some('3'),
                 ..empty_fields
             },
         );
-        Self.nodes.insert(
+        nodes.insert(
             "2",
             Node {
                 value: Some('2'),
                 ..empty_fields
             },
         );
-        Self.nodes.insert(
+        nodes.insert(
             "+",
             Node {
                 value: Some('+'),
                 ..empty_fields
             },
         );
-        Self.nodes.insert(
+        nodes.insert(
             "1",
             Node {
                 value: Some('1'),
                 ..empty_fields
             },
         );
-        Self.nodes.insert(
+        nodes.insert(
             "6",
             Node {
                 value: Some('6'),
                 ..empty_fields
             },
         );
-        Self.nodes.insert()
+        nodes.insert(
+            "=",
+            Node {
+                value: Some('='),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "/",
+            Node {
+                value: Some('/'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "7",
+            Node {
+                value: Some('7'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "8",
+            Node {
+                value: Some('8'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "9",
+            Node {
+                value: Some('9'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "0",
+            Node {
+                value: Some('0'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "h",
+            Node {
+                left: Some("5"),
+                right: Some("4"),
+                value: Some('h'),
+            },
+        );
+        nodes.insert(
+            "v",
+            Node {
+                left: None,
+                right: Some("3"),
+                value: Some('v'),
+            },
+        );
+        nodes.insert(
+            "f",
+            Node {
+                value: Some('f'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "pre2",
+            Node {
+                left: None,
+                right: Some("2"),
+                value: None,
+            },
+        );
+        nodes.insert(
+            "l",
+            Node {
+                value: Some('l'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "pre+",
+            Node {
+                left: Some("+"),
+                right: None,
+                value: None,
+            },
+        );
+        nodes.insert(
+            "p",
+            Node {
+                value: Some('p'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "j",
+            Node {
+                left: None,
+                right: Some("1"),
+                value: Some('j'),
+            },
+        );
+        nodes.insert(
+            "b",
+            Node {
+                left: Some("6"),
+                right: Some("="),
+                value: Some('b'),
+            },
+        );
+        nodes.insert(
+            "x",
+            Node {
+                left: Some("/"),
+                right: None,
+                value: Some('x'),
+            },
+        );
+        nodes.insert(
+            "c",
+            Node {
+                value: Some('c'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "y",
+            Node {
+                value: Some('y'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "z",
+            Node {
+                left: Some("7"),
+                right: None,
+                value: Some('z'),
+            },
+        );
+        nodes.insert(
+            "q",
+            Node {
+                value: Some('q'),
+                ..empty_fields
+            },
+        );
+        nodes.insert(
+            "pre8",
+            Node {
+                left: Some("8"),
+                right: None,
+                value: None,
+            },
+        );
+        nodes.insert(
+            "pre90",
+            Node {
+                left: Some("9"),
+                right: Some("0"),
+                value: None,
+            },
+        );
+        nodes.insert(
+            "s",
+            Node {
+                left: Some("h"),
+                right: Some("v"),
+                value: Some('s'),
+            },
+        );
+        nodes.insert(
+            "u",
+            Node {
+                left: Some("f"),
+                right: Some("p2"),
+                value: Some('u'),
+            },
+        );
+        nodes.insert(
+            "r",
+            Node {
+                left: Some("l"),
+                right: Some("p+"),
+                value: Some('r'),
+            },
+        );
+        nodes.insert(
+            "w",
+            Node {
+                left: Some("p"),
+                right: Some("j"),
+                value: Some('w'),
+            },
+        );
+        nodes.insert(
+            "d",
+            Node {
+                left: Some("b"),
+                right: Some("x"),
+                value: Some('d'),
+            },
+        );
+        nodes.insert(
+            "k",
+            Node {
+                left: Some("c"),
+                right: Some("y"),
+                value: Some('k'),
+            },
+        );
+        nodes.insert(
+            "g",
+            Node {
+                left: Some("z"),
+                right: Some("q"),
+                value: Some('g'),
+            },
+        );
+        nodes.insert(
+            "o",
+            Node {
+                left: Some("pre8"),
+                right: Some("p90"),
+                value: Some('o'),
+            },
+        );
+        nodes.insert(
+            "i",
+            Node {
+                left: Some("s"),
+                right: Some("u"),
+                value: Some('i'),
+            },
+        );
+        nodes.insert(
+            "a",
+            Node {
+                left: Some("r"),
+                right: Some("w"),
+                value: Some('a'),
+            },
+        );
+        nodes.insert(
+            "n",
+            Node {
+                left: Some("d"),
+                right: Some("k"),
+                value: Some('n'),
+            },
+        );
+        nodes.insert(
+            "m",
+            Node {
+                left: Some("g"),
+                right: Some("o"),
+                value: Some('m'),
+            },
+        );
+        nodes.insert(
+            "e",
+            Node {
+                left: Some("i"),
+                right: Some("a"),
+                value: Some('e'),
+            },
+        );
+        nodes.insert(
+            "t",
+            Node {
+                left: Some("n"),
+                right: Some("m"),
+                value: Some('t'),
+            },
+        );
+        nodes.insert(
+            "start",
+            Node {
+                left: Some("e"),
+                right: Some("t"),
+                value: None,
+            },
+        );
+        Self {
+            nodes,
+            cur: "start",
+        }
+    }
+
+    pub fn traverse(&mut self, input: Input) -> Option<char> {
+        match input {
+            Input::Dit => match self.nodes.get(self.cur).unwrap().left {
+                Some(key) => {
+                    self.cur = key;
+                    return Some('_');
+                }
+                None => {
+                    self.cur = "head";
+                    return None;
+                }
+            },
+            Input::Dah => match self.nodes.get(self.cur).unwrap().right {
+                Some(key) => {
+                    self.cur = key;
+                    return Some('_');
+                }
+                None => {
+                    self.cur = "head";
+                    return None;
+                }
+            },
+            Input::Space => match self.nodes.get(self.cur).unwrap().value {
+                Some(value) => {
+                    self.cur = "head";
+                    return Some(value);
+                }
+                None => {
+                    self.cur = "head";
+                    return None;
+                }
+            },
+        }
     }
 }
 
-fn get_tree() -> Tree<'static> {
-    static empty_fields: Node = Node {
-        left: None,
-        right: None,
-        value: Some('5'),
-    };
-    static four: Node = Node {
-        value: Some('4'),
-        ..empty_fields
-    };
-    static three: Node = Node {
-        value: Some('3'),
-        ..empty_fields
-    };
-    static two: Node = Node {
-        value: Some('2'),
-        ..empty_fields
-    };
-    static plus: Node = Node {
-        value: Some('+'),
-        ..empty_fields
-    };
-    static one: Node = Node {
-        value: Some('1'),
-        ..empty_fields
-    };
-    static six: Node = Node {
-        value: Some('6'),
-        ..empty_fields
-    };
-    static equals: Node = Node {
-        value: Some('='),
-        ..empty_fields
-    };
-    static slash: Node = Node {
-        value: Some('/'),
-        ..empty_fields
-    };
-    static seven: Node = Node {
-        value: Some('7'),
-        ..empty_fields
-    };
-    static eight: Node = Node {
-        value: Some('8'),
-        ..empty_fields
-    };
-    static nine: Node = Node {
-        value: Some('9'),
-        ..empty_fields
-    };
-    static zero: Node = Node {
-        value: Some('0'),
-        ..empty_fields
-    };
-    static h: Node = Node {
-        left: Some("5"),
-        right: Some("4"),
-        value: Some('h'),
-    };
-    static v: Node = Node {
-        left: None,
-        right: Some("3"),
-        value: Some('v'),
-    };
-    static f: Node = Node {
-        value: Some('f'),
-        ..empty_fields
-    };
-    static pre_two: Node = Node {
-        left: None,
-        right: Some("2"),
-        value: None,
-    };
-    static l: Node = Node {
-        value: Some('l'),
-        ..empty_fields
-    };
-    static pre_plus: Node = Node {
-        left: Some("+"),
-        right: None,
-        value: None,
-    };
-    static p: Node = Node {
-        value: Some('p'),
-        ..empty_fields
-    };
-    static j: Node = Node {
-        left: None,
-        right: Some("1"),
-        value: Some('j'),
-    };
-    static b: Node = Node {
-        left: Some("6"),
-        right: Some("="),
-        value: Some('b'),
-    };
-    static x: Node = Node {
-        left: Some("/"),
-        right: None,
-        value: Some('x'),
-    };
-    static c: Node = Node {
-        value: Some('c'),
-        ..empty_fields
-    };
-    static y: Node = Node {
-        value: Some('y'),
-        ..empty_fields
-    };
-    static z: Node = Node {
-        left: Some("7"),
-        right: None,
-        value: Some('z'),
-    };
-    static q: Node = Node {
-        value: Some('q'),
-        ..empty_fields
-    };
-    static pre_eight: Node = Node {
-        left: Some("8"),
-        right: None,
-        value: None,
-    };
-    static pre_nine_zero: Node = Node {
-        left: Some("9"),
-        right: Some("0"),
-        value: None,
-    };
-    static s: Node = Node {
-        left: Some("h"),
-        right: Some("v"),
-        value: Some('s'),
-    };
-    static u: Node = Node {
-        left: Some("f"),
-        right: Some("p2"),
-        value: Some('u'),
-    };
-    static r: Node = Node {
-        left: Some("l"),
-        right: Some("p+"),
-        value: Some('r'),
-    };
-    static w: Node = Node {
-        left: Some("p"),
-        right: Some("j"),
-        value: Some('w'),
-    };
-    static d: Node = Node {
-        left: Some("b"),
-        right: Some("x"),
-        value: Some('d'),
-    };
-    static k: Node = Node {
-        left: Some("c"),
-        right: Some("y"),
-        value: Some('k'),
-    };
-    static g: Node = Node {
-        left: Some("z"),
-        right: Some("q"),
-        value: Some('g'),
-    };
-    static o: Node = Node {
-        left: Some("p8"),
-        right: Some("p90"),
-        value: Some('o'),
-    };
-    static i: Node = Node {
-        left: Some("s"),
-        right: Some("u"),
-        value: Some('i'),
-    };
-    static a: Node = Node {
-        left: Some("r"),
-        right: Some("w"),
-        value: Some('a'),
-    };
-    static n: Node = Node {
-        left: Some("d"),
-        right: Some("k"),
-        value: Some('n'),
-    };
-    static m: Node = Node {
-        left: Some("g"),
-        right: Some("o"),
-        value: Some('m'),
-    };
-    static e: Node = Node {
-        left: Some("i"),
-        right: Some("a"),
-        value: Some('e'),
-    };
-    static t: Node = Node {
-        left: Some("n"),
-        right: Some("m"),
-        value: Some('t'),
-    };
-    return Tree {
-        head: Node {
-            left: Some("e"),
-            right: Some("t"),
-            value: None,
-        },
-    };
-}
-
 // Build the tree as an array
+// Rest of the app passes in an array of dits and dahs, expects either a letter or an error
+// Error signals to kill the currently-being-typed letter
