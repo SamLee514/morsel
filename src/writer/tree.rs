@@ -1,12 +1,12 @@
 use std::{collections::HashMap, hash::Hash};
 
-enum Input {
+pub enum Input {
     Dit,
     Dah,
     Space,
 }
 
-enum Output {
+pub enum Output {
     Value(char),
     Pass,
     Oopsie,
@@ -22,7 +22,7 @@ struct Node<'a> {
     value: Option<char>,
 }
 
-struct Tree<'a> {
+pub struct Tree<'a> {
     nodes: HashMap<&'a str, Node<'a>>,
     cur: &'a str,
 }
