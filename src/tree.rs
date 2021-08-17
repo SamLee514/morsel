@@ -6,6 +6,12 @@ enum Input {
     Space,
 }
 
+enum Output {
+    Value(char),
+    Pass,
+    Oopsie,
+}
+
 // Need a character, a "pass" or an error
 // Dits and Dahs don't try to access the character, so they are either "pass" or Error
 // Space try to access the character, so they are either character or Error
@@ -369,36 +375,36 @@ impl Tree<'_> {
         }
     }
 
-    pub fn traverse(&mut self, input: Input) -> Option<char> {
+    pub fn traverse(&mut self, input: Input) -> Output {
         match input {
             Input::Dit => match self.nodes.get(self.cur).unwrap().left {
                 Some(key) => {
                     self.cur = key;
-                    return Some('_');
+                    return Output::Pass;
                 }
                 None => {
                     self.cur = "head";
-                    return None;
+                    return Output::Oopsie;
                 }
             },
             Input::Dah => match self.nodes.get(self.cur).unwrap().right {
                 Some(key) => {
                     self.cur = key;
-                    return Some('_');
+                    return Output::Pass;
                 }
                 None => {
                     self.cur = "head";
-                    return None;
+                    return Output::Oopsie;
                 }
             },
             Input::Space => match self.nodes.get(self.cur).unwrap().value {
                 Some(value) => {
                     self.cur = "head";
-                    return Some(value);
+                    return Output::Value(value);
                 }
                 None => {
                     self.cur = "head";
-                    return None;
+                    return Output::Oopsie;
                 }
             },
         }
