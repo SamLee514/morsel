@@ -1,5 +1,6 @@
 use std::{collections::HashMap, hash::Hash};
 
+#[derive(Copy, Clone)]
 pub enum Input {
     Dit,
     Dah,

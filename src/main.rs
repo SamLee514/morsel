@@ -35,9 +35,10 @@ fn main() {
         println!("Implementing manual soon!");
         return;
     }
-    let t
-    let writer = writer::Writer::new(async_stdin().keys(), io::stdout().into_raw_mode().unwrap());
-    // write!(stdout, "\n").unwrap();
+    write!(io::stdout().into_raw_mode().unwrap(), "\n").unwrap();
+    let mut stdin = async_stdin().keys();
+    let mut writer =
+        writer::Writer::new(async_stdin().keys(), io::stdout().into_raw_mode().unwrap());
 
     let mut now;
     let mut was_keydown = false;
@@ -62,23 +63,24 @@ fn main() {
                 was_keydown = false;
                 // Enter a letter
                 if start.elapsed() < DAH_LEN {
-                    todo!();
                     // Fire off a dit
-                    let result = 
+                    writer.process_input(writer::tree::Input::Dit);
                 } else {
-                    todo!();
                     // Fire off a dah
+                    writer.process_input(writer::tree::Input::Dah);
                 }
                 start = Instant::now();
             } else {
                 // TODO: possibly direct equality will skip
                 if start.elapsed() == LONG_DAH_LEN {
-                    todo!();
                     // Fire off a space
-                }
-                if start.elapsed() == DAH_LEN {
-                    todo!();
-                    // Fire off a letter check
+                    start = Instant::now();
+                } else if start.elapsed() == DAH_LEN {
+                    // Fire off a letter check. If the letter failed, reset the timer so we don't fire a space too early.
+                    match writer.process_input(writer::tree::Input::Space) {
+                        Ok(_) => {}
+                        Err(e) => start = Instant::now(),
+                    }
                 }
             }
         }
