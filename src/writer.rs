@@ -1,5 +1,6 @@
 pub mod tree;
 
+use std::fmt::Display;
 use std::io::{self, Error, Read, Write};
 use std::{
     thread,
@@ -11,41 +12,48 @@ use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use termion::{self, cursor, event::Key};
 
-pub struct Writer<R: Iterator<Item = Result<Key, std::io::Error>>, W: Write> {
+pub struct Writer<W: Write> {
     stdout: W,
-    stdin: R,
     tree: tree::Tree<'static>,
     input_count: u16,
 }
 
-impl<R: Iterator<Item = Result<Key, std::io::Error>>, W: Write> Writer<R, W> {
-    pub fn new(stdin: R, stdout: W) -> Self {
+impl<W: Write> Writer<W> {
+    pub fn new(stdout: W) -> Self {
         Self {
-            stdin: stdin,
             stdout: stdout,
             tree: tree::Tree::new(),
             input_count: 0,
         }
     }
 
-    fn wipe(&mut self) {
-        write!(self.stdout, "{}", cursor::Left(self.input_count)).unwrap();
-        write!(self.stdout, "{}", clear::AfterCursor).unwrap();
+    fn buffered_write(&mut self, content: &str) -> Result<(), std::io::Error> {
+        write!(self.stdout, "{}", content)?;
+        io::stdout().flush()?;
+        Ok(())
+    }
+
+    fn wipe(&mut self) -> Result<(), std::io::Error> {
+        write!(self.stdout, "{}", cursor::Left(self.input_count))?;
+        write!(self.stdout, "{}", clear::AfterCursor)?;
+        io::stdout().flush()?;
+        Ok(())
     }
 
     pub fn process_input(&mut self, input: tree::Input) -> Result<(), std::io::Error> {
         match self.tree.traverse(input) {
             tree::Output::Value(v) => {
-                self.wipe();
-                write!(self.stdout, "{}", v)?;
+                self.wipe()?;
+                self.buffered_write(&v.to_string())?;
+                self.input_count = 0;
             }
             tree::Output::Pass => {
                 self.input_count += 1;
                 match input {
-                    tree::Input::Dit => write!(self.stdout, ".")?,
-                    tree::Input::Dah => write!(self.stdout, "_")?,
+                    tree::Input::Dit => self.buffered_write(".")?,
+                    tree::Input::Dah => self.buffered_write("_")?,
                     tree::Input::Space => {
-                        self.wipe();
+                        self.wipe()?;
                         return Err(std::io::Error::new(
                             std::io::ErrorKind::InvalidInput,
                             "Unexpected space",
@@ -54,7 +62,8 @@ impl<R: Iterator<Item = Result<Key, std::io::Error>>, W: Write> Writer<R, W> {
                 };
             }
             tree::Output::Oopsie => {
-                self.wipe();
+                self.wipe()?;
+                self.input_count = 0;
                 return Err(std::io::Error::new(
                     std::io::ErrorKind::InvalidInput,
                     "Oopsie",

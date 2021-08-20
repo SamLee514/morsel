@@ -310,7 +310,7 @@ impl Tree<'_> {
             "o",
             Node {
                 left: Some("pre8"),
-                right: Some("p90"),
+                right: Some("pre90"),
                 value: Some('o'),
             },
         );
@@ -363,17 +363,14 @@ impl Tree<'_> {
             },
         );
         nodes.insert(
-            "start",
+            "head",
             Node {
                 left: Some("e"),
                 right: Some("t"),
                 value: None,
             },
         );
-        Self {
-            nodes,
-            cur: "start",
-        }
+        Self { nodes, cur: "head" }
     }
 
     pub fn traverse(&mut self, input: Input) -> Output {

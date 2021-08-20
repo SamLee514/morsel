@@ -38,28 +38,26 @@ fn main() {
     write!(io::stdout().into_raw_mode().unwrap(), "\n").unwrap();
     let mut stdin = async_stdin().keys();
     let mut stdout = io::stdout().into_raw_mode().unwrap();
-    // let mut writer =
-    //     writer::Writer::new(async_stdin().keys(), io::stdout().into_raw_mode().unwrap());
+    let mut writer = writer::Writer::new(stdout);
 
-    let mut now;
     let mut was_keydown = false;
     let mut start = Instant::now();
-    let mut count = 0;
     loop {
         let inp = stdin.next();
-        now = start.elapsed();
 
         if let Some(Ok(c)) = inp {
-            write!(stdout, "Hey!");
-            write!(stdout, "{}", cursor::Left(3)).unwrap();
-            write!(stdout, "{}", clear::AfterCursor).unwrap();
-            io::stdout().flush().unwrap();
-            // count += 1;
             match c {
                 Key::Char('q') => {
-                    writeln!(stdout, "{}", count);
-                    // io::stdout().flush().unwrap();
                     return;
+                }
+                Key::Char('j') => {
+                    writer.process_input(writer::tree::Input::Dit);
+                }
+                Key::Char('k') => {
+                    writer.process_input(writer::tree::Input::Dah);
+                }
+                Key::Char('l') => {
+                    writer.process_input(writer::tree::Input::Space);
                 }
                 _ => {
                     if !was_keydown {
@@ -69,18 +67,16 @@ fn main() {
                 }
             };
         } //else {
-          //     // write!(io::stdout().into_raw_mode().unwrap(), "Bye!");
-          //     // io::stdout().flush().unwrap();
           //     // Key up events. Either end a key down or start putting in spaces.
           //     if was_keydown {
           //         was_keydown = false;
           //         // Enter a letter
           //         if start.elapsed() < DAH_LEN {
           //             // Fire off a dit
-          //             // writer.process_input(writer::tree::Input::Dit);
+          //             writer.process_input(writer::tree::Input::Dit);
           //         } else {
           //             // Fire off a dah
-          //             // writer.process_input(writer::tree::Input::Dah);
+          //             writer.process_input(writer::tree::Input::Dah);
           //         }
           //         start = Instant::now();
           //     } else {
@@ -90,10 +86,10 @@ fn main() {
           //             start = Instant::now();
           //         } else if start.elapsed() == DAH_LEN {
           //             // Fire off a letter check. If the letter failed, reset the timer so we don't fire a space too early.
-          //             // match writer.process_input(writer::tree::Input::Space) {
-          //             //     Ok(_) => {}
-          //             //     Err(e) => start = Instant::now(),
-          //             // }
+          //             match writer.process_input(writer::tree::Input::Space) {
+          //                 Ok(_) => {}
+          //                 Err(_) => start = Instant::now(),
+          //             }
           //         }
           //     }
           // }
