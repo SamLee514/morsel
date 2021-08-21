@@ -41,11 +41,11 @@ impl<W: Write> Writer<W> {
     }
 
     pub fn lockout(&mut self) -> Result<(), std::io::Error> {
-        write!(self.stdout, "{}", cursor::Hide)
+        self.buffered_write(&cursor::Hide.to_string())
     }
 
     pub fn unlock(&mut self) -> Result<(), std::io::Error> {
-        write!(self.stdout, "{}", cursor::Show)
+        self.buffered_write(&cursor::Show.to_string())
     }
 
     pub fn end_word(&mut self) -> Result<(), std::io::Error> {
