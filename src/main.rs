@@ -61,8 +61,10 @@ fn main() -> Result<(), std::io::Error> {
      * Continued pause => lockout
      */
     let mut do_nothing_until_keydown = true;
+    let mut check_processed = false;
     loop {
         if let Some(Ok(c)) = stdin.next() {
+            check_processed &= false;
             start = Instant::now();
             match c {
                 Key::Char('q') => {
@@ -99,15 +101,15 @@ fn main() -> Result<(), std::io::Error> {
             };
         } else if !do_nothing_until_keydown {
             let elapsed = start.elapsed();
-            if elapsed == DAH_LEN {
+            if elapsed >= DAH_LEN && !check_processed {
                 match writer.process_input(writer::tree::Input::Space) {
-                    Ok(_) => {}
+                    Ok(_) => check_processed = true,
                     Err(_) => {
                         do_nothing_until_keydown = true;
                         start = Instant::now();
                     }
                 }
-            } else if elapsed == LONG_DAH_LEN {
+            } else if elapsed >= LONG_DAH_LEN {
                 do_nothing_until_keydown = true;
                 writer.end_word()?;
             }

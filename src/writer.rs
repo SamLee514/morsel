@@ -81,10 +81,6 @@ impl<W: Write> Writer<W> {
             tree::Output::Oopsie => {
                 self.wipe()?;
                 self.input_count = 0;
-                return Err(std::io::Error::new(
-                    std::io::ErrorKind::InvalidInput,
-                    "Oopsie",
-                ));
             }
         }
         Ok(())
