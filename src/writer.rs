@@ -40,6 +40,18 @@ impl<W: Write> Writer<W> {
         Ok(())
     }
 
+    pub fn lockout(&mut self) -> Result<(), std::io::Error> {
+        write!(self.stdout, "{}", cursor::Hide)
+    }
+
+    pub fn unlock(&mut self) -> Result<(), std::io::Error> {
+        write!(self.stdout, "{}", cursor::Show)
+    }
+
+    pub fn end_word(&mut self) -> Result<(), std::io::Error> {
+        self.buffered_write(" ")
+    }
+
     pub fn process_input(&mut self, input: tree::Input) -> Result<(), std::io::Error> {
         match self.tree.traverse(input) {
             tree::Output::Value(v) => {
@@ -51,7 +63,12 @@ impl<W: Write> Writer<W> {
                 self.input_count += 1;
                 match input {
                     tree::Input::Dit => self.buffered_write(".")?,
-                    tree::Input::Dah => self.buffered_write("_")?,
+                    tree::Input::Dah => {
+                        // Dahs must always be registered after being first registered as a Dit so it can overwrite
+                        self.buffered_write(&cursor::Left(1).to_string())?;
+                        self.buffered_write(&clear::AfterCursor.to_string())?;
+                        self.buffered_write("_")?;
+                    }
                     tree::Input::Space => {
                         self.wipe()?;
                         return Err(std::io::Error::new(
