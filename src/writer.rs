@@ -10,7 +10,7 @@ use structopt::StructOpt;
 use termion::clear;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
-use termion::{self, cursor, event::Key};
+use termion::{self, cursor, event::Key, style};
 
 pub struct Writer<W: Write> {
     stdout: W,
@@ -41,11 +41,26 @@ impl<W: Write> Writer<W> {
     }
 
     pub fn lockout(&mut self) -> Result<(), std::io::Error> {
-        self.buffered_write(&cursor::Hide.to_string())
+        self.buffered_write(&style::Faint.to_string())?;
+        self.buffered_write(&cursor::Hide.to_string())?;
+        Ok(())
     }
 
     pub fn unlock(&mut self) -> Result<(), std::io::Error> {
-        self.buffered_write(&cursor::Show.to_string())
+        self.buffered_write(&style::NoFaint.to_string())?;
+        self.buffered_write(&cursor::Show.to_string())?;
+        Ok(())
+    }
+
+    pub fn preview_dit(&mut self) -> Result<(), std::io::Error> {
+        self.buffered_write(".")
+    }
+
+    pub fn preview_dah(&mut self) -> Result<(), std::io::Error> {
+        self.buffered_write(&cursor::Left(1).to_string())?;
+        self.buffered_write(&clear::AfterCursor.to_string())?;
+        self.buffered_write("_")?;
+        Ok(())
     }
 
     pub fn end_word(&mut self) -> Result<(), std::io::Error> {
@@ -62,11 +77,6 @@ impl<W: Write> Writer<W> {
             tree::Output::Pass => {
                 self.input_count += 1;
                 match input {
-                    tree::Input::Dit => self.buffered_write(".")?,
-                    tree::Input::Dah => {
-                        // Dahs must always be registered after being first registered as a Dit so it can overwrite
-                        self.buffered_write("_")?;
-                    }
                     tree::Input::Space => {
                         self.wipe()?;
                         return Err(std::io::Error::new(
@@ -74,6 +84,7 @@ impl<W: Write> Writer<W> {
                             "Unexpected space",
                         ));
                     }
+                    _ => {}
                 };
             }
             tree::Output::Oopsie => {

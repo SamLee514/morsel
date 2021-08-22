@@ -66,6 +66,7 @@ fn main() -> Result<(), std::io::Error> {
                     let mut holding = false;
                     let mut input = writer::tree::Input::Dit;
                     writer.lockout()?;
+                    writer.preview_dit()?;
                     loop {
                         // writer.end_word()?;
                         if start.elapsed() >= DIT_LEN {
@@ -81,6 +82,7 @@ fn main() -> Result<(), std::io::Error> {
                                     if !holding {
                                         holding = true;
                                         input = writer::tree::Input::Dah;
+                                        writer.preview_dah()?;
                                     }
                                     start = Instant::now();
                                 }
