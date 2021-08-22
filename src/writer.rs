@@ -65,10 +65,7 @@ impl<W: Write> Writer<W> {
                     tree::Input::Dit => self.buffered_write(".")?,
                     tree::Input::Dah => {
                         // Dahs must always be registered after being first registered as a Dit so it can overwrite
-                        self.buffered_write(&cursor::Left(1).to_string())?;
-                        self.buffered_write(&clear::AfterCursor.to_string())?;
                         self.buffered_write("_")?;
-                        self.input_count -= 1;
                     }
                     tree::Input::Space => {
                         self.wipe()?;

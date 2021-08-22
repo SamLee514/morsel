@@ -262,7 +262,7 @@ impl Tree<'_> {
             "u",
             Node {
                 left: Some("f"),
-                right: Some("p2"),
+                right: Some("pre2"),
                 value: Some('u'),
             },
         );
@@ -270,7 +270,7 @@ impl Tree<'_> {
             "r",
             Node {
                 left: Some("l"),
-                right: Some("p+"),
+                right: Some("pre+"),
                 value: Some('r'),
             },
         );
