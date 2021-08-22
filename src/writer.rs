@@ -47,6 +47,8 @@ impl<W: Write> Writer<W> {
     }
 
     pub fn unlock(&mut self) -> Result<(), std::io::Error> {
+        self.buffered_write(&cursor::Left(1).to_string())?;
+        self.buffered_write(&clear::AfterCursor.to_string())?;
         self.buffered_write(&style::NoFaint.to_string())?;
         self.buffered_write(&cursor::Show.to_string())?;
         Ok(())
@@ -77,6 +79,11 @@ impl<W: Write> Writer<W> {
             tree::Output::Pass => {
                 self.input_count += 1;
                 match input {
+                    tree::Input::Dit => self.buffered_write(".")?,
+                    tree::Input::Dah => {
+                        // Dahs must always be registered after being first registered as a Dit so it can overwrite
+                        self.buffered_write("_")?;
+                    }
                     tree::Input::Space => {
                         self.wipe()?;
                         return Err(std::io::Error::new(
@@ -84,7 +91,6 @@ impl<W: Write> Writer<W> {
                             "Unexpected space",
                         ));
                     }
-                    _ => {}
                 };
             }
             tree::Output::Oopsie => {

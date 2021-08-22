@@ -70,7 +70,6 @@ fn main() -> Result<(), std::io::Error> {
                     loop {
                         // writer.end_word()?;
                         if start.elapsed() >= DIT_LEN {
-                            writer.process_input(input)?;
                             break;
                         } else if let Some(Ok(c1)) = stdin.next() {
                             match c1 {
@@ -90,6 +89,7 @@ fn main() -> Result<(), std::io::Error> {
                         }
                     }
                     writer.unlock()?;
+                    writer.process_input(input)?;
                 }
             };
         } else if !do_nothing_until_keydown {
