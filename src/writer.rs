@@ -68,6 +68,7 @@ impl<W: Write> Writer<W> {
                         self.buffered_write(&cursor::Left(1).to_string())?;
                         self.buffered_write(&clear::AfterCursor.to_string())?;
                         self.buffered_write("_")?;
+                        self.input_count -= 1;
                     }
                     tree::Input::Space => {
                         self.wipe()?;
