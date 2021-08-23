@@ -1,12 +1,6 @@
 pub mod tree;
 
-use std::fmt::Display;
 use std::io::{self, Error, Read, Write};
-use std::{
-    thread,
-    time::{Duration, Instant},
-};
-use structopt::StructOpt;
 use termion::clear;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -33,8 +27,12 @@ impl<W: Write> Writer<W> {
         Ok(())
     }
 
-    fn wipe(&mut self) -> Result<(), std::io::Error> {
-        write!(self.stdout, "{}", cursor::Left(self.input_count))?;
+    pub fn wipe(&mut self) -> Result<(), std::io::Error> {
+        self.backspace(self.input_count)
+    }
+
+    pub fn backspace(&mut self, count: u16) -> Result<(), std::io::Error> {
+        write!(self.stdout, "{}", cursor::Left(count))?;
         write!(self.stdout, "{}", clear::AfterCursor)?;
         io::stdout().flush()?;
         Ok(())

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashMap;
 
 #[derive(Copy, Clone)]
 pub enum Input {
