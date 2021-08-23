@@ -126,9 +126,6 @@ pub fn manual_loop(
                         word_checked = true;
                     }
                 },
-                Key::Backspace => {
-                    writer.backspace(1)?;
-                }
                 _ => {}
             }
         }

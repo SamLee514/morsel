@@ -25,11 +25,7 @@ impl<W: Write> Writer<W> {
     }
 
     pub fn wipe(&mut self) -> Result<(), Error> {
-        self.backspace(self.input_count)
-    }
-
-    pub fn backspace(&mut self, count: u16) -> Result<(), Error> {
-        write!(self.stdout, "{}", cursor::Left(count))?;
+        write!(self.stdout, "{}", cursor::Left(self.input_count))?;
         write!(self.stdout, "{}", clear::AfterCursor)?;
         io::stdout().flush()?;
         Ok(())
