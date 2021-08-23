@@ -13,10 +13,6 @@ pub enum Output {
     Oopsie,
 }
 
-// Need a character, a "pass" or an error
-// Dits and Dahs don't try to access the character, so they are either "pass" or Error
-// Space try to access the character, so they are either character or Error
-
 struct Node<'a> {
     left: Option<&'a str>,
     right: Option<&'a str>,
@@ -408,7 +404,3 @@ impl Tree<'_> {
         }
     }
 }
-
-// Build the tree as an array
-// Rest of the app passes in an array of dits and dahs, expects either a letter or an error
-// Error signals to kill the currently-being-typed letter

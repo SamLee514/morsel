@@ -1,17 +1,12 @@
 mod help;
-mod runner;
 mod writer;
 
-use std::io::{self, Read, Stdout, Write};
-use std::{
-    thread,
-    time::{Duration, Instant},
-};
+use std::io::{self, Stdout, Write};
+use std::time::{Duration, Instant};
 use structopt::StructOpt;
 use termion::input::TermRead;
 use termion::raw::{IntoRawMode, RawTerminal};
 use termion::{self, async_stdin, event::Key, input::Keys, AsyncReader};
-use termion::{clear, cursor};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "morsel", about = "morse code CLI tool")]
