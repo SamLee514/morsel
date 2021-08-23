@@ -44,8 +44,7 @@ pub fn main_loop(
             start = Instant::now();
             match c {
                 Key::Char('q') => {
-                    writer.unlock()?;
-                    writer.new_line()?;
+                    writer.gracefully_quit()?;
                     return Ok(());
                 }
                 _ => {

@@ -64,8 +64,10 @@ impl<W: Write> Writer<W> {
         self.buffered_write(" ")
     }
 
-    pub fn new_line(&mut self) -> Result<(), Error> {
-        self.buffered_write("\n")
+    pub fn gracefully_quit(&mut self) -> Result<(), Error> {
+        self.buffered_write(&style::NoFaint.to_string())?;
+        self.buffered_write(&cursor::Show.to_string())?;
+        self.buffered_write("\n\r")
     }
 
     pub fn process_input(&mut self, input: tree::Input) -> Result<(), Error> {
