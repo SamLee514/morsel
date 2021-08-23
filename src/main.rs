@@ -107,6 +107,7 @@ pub fn manual_loop(
         if let Some(Ok(c)) = stdin.next() {
             match c {
                 Key::Char('q') => {
+                    writer.gracefully_quit()?;
                     return Ok(());
                 }
                 Key::Char('.') => {
