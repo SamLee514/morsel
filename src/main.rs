@@ -4,9 +4,13 @@ mod writer;
 use std::io::{self, Stdout, Write};
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
-use termion::input::TermRead;
-use termion::raw::{IntoRawMode, RawTerminal};
-use termion::{self, async_stdin, event::Key, input::Keys, AsyncReader};
+use termion::{
+    self, async_stdin,
+    event::Key,
+    input::{Keys, TermRead},
+    raw::{IntoRawMode, RawTerminal},
+    AsyncReader,
+};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "morsel", about = "morse code CLI tool")]
@@ -41,6 +45,7 @@ pub fn main_loop(
             match c {
                 Key::Char('q') => {
                     writer.unlock()?;
+                    writer.new_line()?;
                     return Ok(());
                 }
                 _ => {
@@ -96,7 +101,6 @@ pub fn manual_loop(
     mut stdin: Keys<AsyncReader>,
     mut writer: writer::Writer<RawTerminal<Stdout>>,
 ) -> Result<(), std::io::Error> {
-    println!("manual loop");
     let mut word_checked = false;
     loop {
         if let Some(Ok(c)) = stdin.next() {

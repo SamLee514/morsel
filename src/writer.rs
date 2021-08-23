@@ -1,8 +1,7 @@
 pub mod tree;
 
 use std::io::{self, Error, ErrorKind, Write};
-use termion::clear;
-use termion::{self, cursor, style};
+use termion::{self, clear, cursor, style};
 
 pub struct Writer<W: Write> {
     stdout: W,
@@ -63,6 +62,10 @@ impl<W: Write> Writer<W> {
 
     pub fn end_word(&mut self) -> Result<(), Error> {
         self.buffered_write(" ")
+    }
+
+    pub fn new_line(&mut self) -> Result<(), Error> {
+        self.buffered_write("\n")
     }
 
     pub fn process_input(&mut self, input: tree::Input) -> Result<(), Error> {
