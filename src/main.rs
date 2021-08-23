@@ -1,7 +1,7 @@
 mod help;
 mod writer;
 
-use std::io::{self, Stdout, Write};
+use std::io::{self, Stdout};
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
 use termion::{
@@ -15,13 +15,15 @@ use termion::{
 #[derive(Debug, StructOpt)]
 #[structopt(name = "morsel", about = "morse code CLI tool")]
 struct Opt {
-    #[structopt(short, long)]
-    help: bool,
-
-    #[structopt(short, long)]
+    #[structopt(short, long, help = "Enter manual mode")]
     manual: bool,
 
-    #[structopt(short, long, default_value = "500")]
+    #[structopt(
+        short,
+        long,
+        default_value = "500",
+        help = "Length of dit in milliseconds (must be longer than your machine's key repeat delay)"
+    )]
     dit_length: u64,
 }
 
@@ -135,20 +137,12 @@ pub fn manual_loop(
 
 fn main() -> Result<(), std::io::Error> {
     let opt = Opt::from_args();
-    assert!(
-        !(opt.manual && opt.help),
-        "Cannot do manual mode and help simultaneously >:("
-    );
-    write!(io::stdout().into_raw_mode().unwrap(), "\n").unwrap();
-    if opt.help {
-        help::show()
+    help::show()?;
+    let stdin = async_stdin().keys();
+    let writer = writer::Writer::new(io::stdout().into_raw_mode().unwrap());
+    if opt.manual {
+        manual_loop(stdin, writer)
     } else {
-        let stdin = async_stdin().keys();
-        let writer = writer::Writer::new(io::stdout().into_raw_mode().unwrap());
-        if opt.manual {
-            manual_loop(stdin, writer)
-        } else {
-            main_loop(stdin, writer, opt.dit_length)
-        }
+        main_loop(stdin, writer, opt.dit_length)
     }
 }

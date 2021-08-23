@@ -1,6 +1,9 @@
 pub fn show() -> Result<(), std::io::Error> {
-    println!("Use --manual (-m) to enter manual mode and --dit-length=... (-d=...) to set the length of a dit (default half a second)");
+    println!();
+    println!("Use --manual (-m) to enter manual mode and --dit-length=... (-d=...) to set the length of a dit in milliseconds (default 500)");
+    println!();
     println!("** Note that dit length is not used in manual mode and should be greater than your machine's key repeat delay.");
+    println!("** If you find it to be too slow, you can decrease your machine's key repeat delay or double tap instead of holding.");
     println!();
     println!("Regular mode:");
     println!("- Tap any key to input a dit (.). Hold any key (or double tap within one dit length) to input a dah (_).");
@@ -10,6 +13,7 @@ pub fn show() -> Result<(), std::io::Error> {
     println!("Manual Mode:");
     println!("- Type '.' and '_' manually. Press space once to translate and another time to input spaces.");
     println!();
+    println!("Key:");
     println!("a: ._    n: _.    1: .____");
     println!("b: _...  o: ___   2: ..___");
     println!("c: _._.  p: .__.  3: ...__");
@@ -23,5 +27,6 @@ pub fn show() -> Result<(), std::io::Error> {
     println!("k: _._   x: _.._  /: _.._.");
     println!("l: ._..  y: _.__  =: _..._");
     println!("m: __    z: __..");
+    println!();
     Ok(())
 }
